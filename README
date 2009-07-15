@@ -1,0 +1,19 @@
+This is just a quick little script I pieced together to help evaluate the solutions of some Ruby excercises I saw come across the Fort Worth Ruby Brigade group mail.
+
+Basically, just run:
+
+<code>
+  ruby compare.rb one/solutions.rb
+</code>
+
+This will give you one benchmark, some results on the console and a results file in /one.
+
+If you'd really like to give the solutions a whirl try:
+
+<code>
+  ruby compare.rb -n 1000 one/solutions.rb
+</code>
+
+This will perform 1000 benchmarks on the various solutions. (The order in which each solution is executed is randomized for each benchmark.)
+
+If you've got ideas on how to make this do more, just holler. mark mcspadden at gmail
