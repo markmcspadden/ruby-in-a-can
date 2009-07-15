@@ -42,11 +42,6 @@ end
 # Get our solutions
 available_solutions = Solutions.singleton_methods.sort!
 
-# First output results
-available_solutions.each do |solution|
-  puts "#{solution}: #{Solutions.send(solution)}"
-end
-
 # Initialize a hash to hold the results
 # { :john => [], :mark => [] }
 all_times = available_solutions.inject({}){ |h,k| h.merge({k.to_sym => {:all => []}})}
@@ -78,12 +73,22 @@ end
 
 # Start putting together results
 # Includes:
+#   * Output from each solution
 #   * Best Average
 #   * All Averages
 #   * Performance difference between Best and Worst method
 #   * Most Stable (based on Std Dev)
 #   * All Std Devs
-results = "Benchmarks: #{n}"
+results = ""
+
+results << "Results \r\n"
+available_solutions.each do |solution|
+  results << "#{solution}: #{Solutions.send(solution)}\r\n"
+end
+
+results << "-------\r\n"
+
+results << "Benchmarks: #{n}"
 
 results << "\r\n-------\r\n"
 
