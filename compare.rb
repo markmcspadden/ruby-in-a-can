@@ -1,9 +1,29 @@
 # We can now track the ruby as it gets fed into the compiler
 SCRIPT_LINES__ = {}
 
+# Setup file_path variable
+file_path = nil
+
+# Default to only one benchmark
+n = 1
+
+
+# Requried: a file path at the end of the ARGVs
+# Optional: -n : number of benchmarks to us
+ARGV.each_with_index do |a, idx|  
+  if a.to_s == "-n"
+    n = ARGV[idx+1].to_i
+  end
+  
+  if idx == ARGV.size-1
+    file_path = a
+  end
+end
+
+throw "A file path pointing to a .rb file is required" if file_path.nil?
+
 # Bring in our solutions
-file_name = "/one/solutions.rb"
-require File.expand_path(File.dirname(__FILE__) + file_name)
+require file_path
 
 # And our benchmark tool
 require 'benchmark'
@@ -33,7 +53,7 @@ all_times = available_solutions.inject({}){ |h,k| h.merge({k.to_sym => {:all => 
 
 # Do x number of benchmarks
 # We randomize the order as we go
-1000.times do
+n.times do
   solutions = available_solutions.sort_by{ rand }
 
   bench = Benchmark.bmbm(10) do |x|
@@ -63,7 +83,9 @@ end
 #   * Performance difference between Best and Worst method
 #   * Most Stable (based on Std Dev)
 #   * All Std Devs
-results = ""
+results = "Benchmarks: #{n}"
+
+results << "\r\n-------\r\n"
 
 best_avg = all_times.to_a.sort_by{ |a| a.last[:avg] }
 best_sd = all_times.to_a.sort_by{ |a| a.last[:std_dev] }
@@ -87,7 +109,9 @@ results << "All Standard Deviations\r\n"
 best_sd.each { |a| results << "#{a.first}: #{format("%f", a.last[:std_dev])}\r\n" }
 
 # Output results to file
-File.open(File.expand_path(File.dirname(__FILE__) + "/one/solutions_results.txt"), "w+") do |file|
+file_name = file_path.to_s.split("/").last
+file_dirs = file_path.to_s.split("/") - [file_name]
+File.open(file_dirs.join("/") + "/results.txt", "w+") do |file|
   file.puts results
 end
 
@@ -96,7 +120,7 @@ end
 puts "=" * 100
 
 puts "\r\n"
-SCRIPT_LINES__[File.expand_path(File.dirname(__FILE__) + file_name)].each do |line|
+SCRIPT_LINES__["./" + file_path].each do |line|
     puts "#{line}"
 end
 puts "\r\n"
