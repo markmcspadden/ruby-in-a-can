@@ -1,0 +1,18 @@
+Best Average: shannon2 (0.00183304)
+-------
+All Averages
+shannon2: 0.00183304
+shannon: 0.001908284
+john: 0.002128616
+mark: 0.002835935
+mark2: 0.003067425
+-------
+Difference Between Best Method and Worst Method (based on average time): A factor of 1.673409. (Meaning the best method is about 2x better than the worst)
+-------
+Most Consistent (based on Std Dev): shannon2 (0.002728)
+All Standard Deviations
+shannon2: 0.002728
+shannon: 0.002791
+john: 0.003017
+mark: 0.003146
+mark2: 0.003795

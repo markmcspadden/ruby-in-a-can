@@ -2,7 +2,8 @@
 SCRIPT_LINES__ = {}
 
 # Bring in our solutions
-require File.expand_path(File.dirname(__FILE__) + "/one/solutions.rb")
+file_name = "/one/solutions.rb"
+require File.expand_path(File.dirname(__FILE__) + file_name)
 
 # And our benchmark tool
 require 'benchmark'
@@ -55,36 +56,52 @@ all_times.each_pair do |k,v|
   all_times[k][:std_dev] = sd
 end
 
-puts "=" * 100
-
-puts "\r\n"
-SCRIPT_LINES__[File.expand_path(File.dirname(__FILE__) + "/solutions.rb")].each do |line|
-    puts "#{line}"
-end
+# Start putting together results
+# Includes:
+#   * Best Average
+#   * All Averages
+#   * Performance difference between Best and Worst method
+#   * Most Stable (based on Std Dev)
+#   * All Std Devs
+results = ""
 
 best_avg = all_times.to_a.sort_by{ |a| a.last[:avg] }
 best_sd = all_times.to_a.sort_by{ |a| a.last[:std_dev] }
 
-puts "\r\n"
-puts "Best Average: #{best_avg.first.first} (#{best_avg.first.last[:avg]})"
+results << "Best Average: #{best_avg.first.first} (#{best_avg.first.last[:avg]})"
 
-puts "\r\n"
-puts "All Averages"
-best_avg.each { |a| puts "#{a.first}: #{a.last[:avg]}" }
+results << "\r\n-------\r\n"
+results << "All Averages\r\n"
+best_avg.each { |a| results << "#{a.first}: #{a.last[:avg]}\r\n" }
 
 diff = best_avg.last.last[:avg]/best_avg.first.last[:avg]
+results << "-------\r\n"
+results << "Difference Between Best Method and Worst Method (based on average time): A factor of #{format("%f", diff)}. (Meaning the best method is about #{diff.round}x better than the worst)"
+
+
+results << "\r\n-------\r\n"
+results << "Most Consistent (based on Std Dev): #{best_sd.first.first} (#{format("%f", best_avg.first.last[:std_dev])})"
+
+results << "\r\n"
+results << "All Standard Deviations\r\n"
+best_sd.each { |a| results << "#{a.first}: #{format("%f", a.last[:std_dev])}\r\n" }
+
+# Output results to file
+File.open(File.expand_path(File.dirname(__FILE__) + "/one/solutions_results.txt"), "w+") do |file|
+  file.puts results
+end
+
+# Outputs results to console
+# Also output the whole solutions.rb file to console
+puts "=" * 100
+
 puts "\r\n"
-puts "Difference Between Best Method and Worst Method (based on average time): A factor of #{format("%f", diff)}. (Meaning the best method is about #{diff.round}x better than the worst)"
-
-
+SCRIPT_LINES__[File.expand_path(File.dirname(__FILE__) + file_name)].each do |line|
+    puts "#{line}"
+end
 puts "\r\n"
-puts "Most Consistent (based on Std Dev): #{best_sd.first.first} (#{format("%f", best_avg.first.last[:std_dev])})"
 
-puts "\r\n"
-puts "All Standard Deviations"
-best_sd.each { |a| puts "#{a.first}: #{format("%f", a.last[:std_dev])}" }
-
-
+results.split("\r\n").each { |r| puts r }
 
 
 
