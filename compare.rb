@@ -2,7 +2,7 @@
 SCRIPT_LINES__ = {}
 
 # Bring in our solutions
-require File.expand_path(File.dirname(__FILE__) + "/solutions.rb")
+require File.expand_path(File.dirname(__FILE__) + "/one/solutions.rb")
 
 # And our benchmark tool
 require 'benchmark'
